@@ -25,7 +25,7 @@ const projectService = generateProjectService({ filePath });
 projectRoutes({ publicRoutes, privateRoutes, projectService });
 
 const taskService = generateTaskService({ filePath });
-taskRoutes({ publicRoutes, privateRoutes, taskService });
+taskRoutes({ publicRoutes, privateRoutes, taskService, projectService });
 
 export default {
   privateRoutes,
