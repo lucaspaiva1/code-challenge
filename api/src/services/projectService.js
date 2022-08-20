@@ -3,10 +3,6 @@ export default class ProjectService {
     this.projectRepository = projectRepository;
   }
 
-  find() {
-    return this.projectRepository.find();
-  }
-
   list(userId) {
     return this.projectRepository.list(userId);
   }

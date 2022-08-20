@@ -4,7 +4,7 @@ import ProjectService from "../../src/services/projectService.js";
 import database from "../../src/util/database.js";
 
 describe("ProjectService", () => {
-  it("should test user projects listing", () => {
+  it("should test user project list service", () => {
     const userId = "3f517fc0-da92-4de8-bb6e-b594ab24bb84";
     const projectId1 = "d620a01e-383b-4f4a-b710-506807e9160a";
     const projectId2 = "fdc51954-cb47-45ce-b928-359938e4649b";
@@ -31,7 +31,6 @@ describe("ProjectService", () => {
     database.read = jest.fn().mockReturnValue(databaseMock);
 
     const projectRepository = new ProjectRepository({});
-
     const service = new ProjectService({ projectRepository });
 
     const response = service.list(userId);
@@ -40,5 +39,25 @@ describe("ProjectService", () => {
     expect(response.find((p) => p.id === projectId1)).toBeDefined();
     expect(response.find((p) => p.id === projectId3)).toBeDefined();
     expect(response.find((p) => p.id === projectId2)).toBeUndefined();
+  });
+
+  it("should test user project create service", () => {
+    const userId = "3f517fc0-da92-4de8-bb6e-b594ab24bb84";
+    const name = "Lorem ipsum";
+    const projectMock = { userId, name };
+
+    database.write = jest.fn(() => {});
+
+    const projectRepository = new ProjectRepository({});
+    const service = new ProjectService({ projectRepository });
+
+    const response = service.create(projectMock);
+
+    expect(database.write.mock.calls.length).toBe(1);
+    expect(database.write.mock.calls[0][2].name).toBe(name);
+    expect(database.write.mock.calls[0][2].userId).toBe(userId);
+
+    expect(response.name).toBe(name);
+    expect(response.userId).toBe(userId);
   });
 });

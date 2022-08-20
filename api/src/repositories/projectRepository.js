@@ -22,6 +22,7 @@ export default class ProjectRepository {
   }
 
   create(data) {
-    return write(this.file, this.source, data);
+    database.write(this.file, this.source, data);
+    return data;
   }
 }
