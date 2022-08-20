@@ -35,12 +35,24 @@ export default class TaskService {
       data.finishedAt = new Date();
     }
 
-    return this.taskRepository.update(id, data);
+    const task = this.taskRepository.update(id, userId, data);
+
+    if (!task) {
+      throw new EntityNotFoundError();
+    }
+
+    return task;
   }
 
-  delete({ data }) {
-    const { userId, projectId } = data;
+  delete({ id, userId, projectId }) {
     this.#checkUserProject({ userId, projectId });
-    return this.taskRepository.create(data);
+
+    const task = this.taskRepository.delete(id, userId);
+
+    if (!task) {
+      throw new EntityNotFoundError();
+    }
+
+    return task;
   }
 }

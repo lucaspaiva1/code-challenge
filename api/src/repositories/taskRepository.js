@@ -22,20 +22,35 @@ export default class TaskRepository {
     return data;
   }
 
-  update(id, data) {
+  update(id, userId, data) {
     let task = null;
 
-    const taskList = this.list({
-      userId: data.userId,
-      projectId: data.projectId,
-    });
+    const taskList = this.readDatabaseContent();
 
-    const taskListUpdated = taskList.map((p) => {
-      if (p.id === id) {
-        task = { ...p, ...data };
+    const taskListUpdated = taskList.map((item) => {
+      if (item.id === id && item.userId === userId) {
+        task = { ...item, ...data };
         return task;
       }
       return data;
+    });
+
+    if (task) database.overwrite(this.file, this.source, taskListUpdated);
+
+    return task;
+  }
+
+  delete(id, userId) {
+    let task = null;
+
+    const taskList = this.readDatabaseContent();
+
+    const taskListUpdated = taskList.filter((item) => {
+      if (item.id === id && item.userId === userId) {
+        task = { ...item };
+        return false;
+      }
+      return true;
     });
 
     if (task) database.overwrite(this.file, this.source, taskListUpdated);

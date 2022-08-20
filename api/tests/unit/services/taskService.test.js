@@ -293,4 +293,47 @@ describe("TaskService", () => {
     expect(response.id).toBe(taskId);
     expect(response.finishedAt).toStrictEqual(freezeDate);
   });
+
+  it("should delete a task", () => {
+    const userId = "3f517fc0-da92-4de8-bb6e-b594ab24bb84";
+    const projectId = "659215ff-f97a-4123-90f1-e27d68f3be10";
+    const taskId = "d41caa30-9880-4dee-bb55-22e0cf805cbb";
+
+    const tasksDatabaseMock = [
+      {
+        id: taskId,
+        userId,
+        projectId,
+        description: "do something",
+        finishedAt: null,
+      },
+    ];
+
+    const projectsDatabaseMock = [
+      {
+        projectId,
+        name: "My Project",
+        userId,
+      },
+    ];
+
+    database.read = jest
+      .fn()
+      .mockReturnValueOnce(projectsDatabaseMock)
+      .mockReturnValueOnce(tasksDatabaseMock);
+
+    database.overwrite = jest.fn(() => {});
+
+    const projectRepository = new ProjectRepository({});
+    const taskRepository = new TaskRepository({});
+    const service = new TaskService({ taskRepository, projectRepository });
+
+    const response = service.delete({ id: taskId, userId, projectId });
+
+    expect(database.overwrite.mock.calls.length).toBe(1);
+    expect(database.overwrite.mock.calls[0][2]).toStrictEqual([]);
+
+    expect(response).toBeDefined();
+    expect(response.id).toBe(taskId);
+  });
 });
