@@ -21,7 +21,11 @@ export default class ProjectService {
     return project;
   }
 
-  delete({ data }) {
-    return this.projectRepository.delete(data);
+  delete({ id, userId }) {
+    const project = this.projectRepository.delete(id, userId);
+    if (!project) {
+      throw new EntityNotFoundError();
+    }
+    return project;
   }
 }

@@ -29,13 +29,30 @@ export default class ProjectRepository {
   update(id, userId, data) {
     let project = null;
 
-    const projectList = this.list(userId);
-    const projectListUpdated = projectList.map((p) => {
-      if (p.id === id) {
-        project = { ...p, ...data };
+    const projectList = this.readDatabaseContent();
+    const projectListUpdated = projectList.map((item) => {
+      if (item.id === id && item.userId === userId) {
+        project = { ...item, ...data };
         return project;
       }
       return data;
+    });
+
+    if (project) database.overwrite(this.file, this.source, projectListUpdated);
+
+    return project;
+  }
+
+  delete(id, userId) {
+    let project = null;
+
+    const projectList = this.readDatabaseContent();
+    const projectListUpdated = projectList.filter((item) => {
+      if (item.id === id && item.userId === userId) {
+        project = { ...item };
+        return false;
+      }
+      return true;
     });
 
     if (project) database.overwrite(this.file, this.source, projectListUpdated);

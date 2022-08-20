@@ -101,4 +101,31 @@ describe("ProjectService", () => {
 
     expect(response.name).toBe(newProjectName.name);
   });
+
+  it("should delete a project", () => {
+    const databaseMock = [
+      {
+        id: "d620a01e-383b-4f4a-b710-506807e9160a",
+        userId: "3f517fc0-da92-4de8-bb6e-b594ab24bb84",
+        name: "Lorem ipsum",
+      },
+    ];
+
+    database.read = jest.fn().mockReturnValue(databaseMock);
+    database.overwrite = jest.fn(() => {});
+
+    const projectRepository = new ProjectRepository({});
+    const service = new ProjectService({ projectRepository });
+
+    const response = service.delete({
+      id: databaseMock[0].id,
+      userId: databaseMock[0].userId,
+    });
+
+    expect(database.overwrite.mock.calls.length).toBe(1);
+    expect(database.overwrite.mock.calls[0][2]).toStrictEqual([]);
+
+    expect(response).toBeDefined();
+    expect(response.id).toBe(databaseMock[0].id);
+  });
 });
