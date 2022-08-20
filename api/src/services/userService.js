@@ -23,4 +23,19 @@ export default class UserService {
 
     return createdUser;
   }
+
+  authenticate({ username, password }) {
+    if (!username || !password) return null;
+
+    const users = this.userRepository.list();
+    const user = users.find(
+      (u) => u.password === password && u.username === username
+    );
+
+    if (!user) return null;
+
+    delete user.password;
+
+    return user;
+  }
 }

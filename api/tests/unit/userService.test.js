@@ -4,7 +4,7 @@ import UserService from "../../src/services/userService";
 import database from "../../src/util/database.js";
 
 describe("UserService", () => {
-  it("should test user create service", () => {
+  it("create user with success", () => {
     database.write = jest.fn(() => {});
     database.read = jest.fn().mockReturnValue([]);
 
@@ -29,7 +29,7 @@ describe("UserService", () => {
     expect(response.password).toBeUndefined();
   });
 
-  it("should test user create service with duplicated username", () => {
+  it("create user with duplicated username", () => {
     const databaseMock = [
       {
         id: "3f517fc0-da92-4de8-bb6e-b594ab24bb84",
@@ -52,6 +52,118 @@ describe("UserService", () => {
     const response = service.create({ data: userMock });
 
     expect(database.write.mock.calls.length).toBe(0);
+
+    expect(response).toBe(null);
+  });
+
+  it("authenticate user with success", () => {
+    const databaseMock = [
+      {
+        id: "3f517fc0-da92-4de8-bb6e-b594ab24bb84",
+        fullName: "First User",
+        username: "username",
+        password: "password123",
+      },
+    ];
+
+    const authMock = {
+      username: "username",
+      password: "password123",
+    };
+
+    database.read = jest.fn().mockReturnValue(databaseMock);
+
+    const userRepository = new UserRepository({});
+    const service = new UserService({ userRepository });
+
+    const response = service.authenticate(authMock);
+
+    expect(database.read.mock.calls.length).toBe(1);
+
+    expect(response).toBeDefined();
+    expect(response.id).toBe(databaseMock[0].id);
+    expect(response.fullName).toBe(databaseMock[0].fullName);
+    expect(response.username).toBe(databaseMock[0].username);
+    expect(response.password).toBeUndefined();
+  });
+
+  it("authenticate user without username", () => {
+    const databaseMock = [
+      {
+        id: "3f517fc0-da92-4de8-bb6e-b594ab24bb84",
+        fullName: "First User",
+        username: "username",
+        password: "password123",
+      },
+    ];
+
+    const authMock = {
+      username: "",
+      password: "password123",
+    };
+
+    database.read = jest.fn().mockReturnValue(databaseMock);
+
+    const userRepository = new UserRepository({});
+    const service = new UserService({ userRepository });
+
+    const response = service.authenticate(authMock);
+
+    expect(database.read.mock.calls.length).toBe(0);
+
+    expect(response).toBe(null);
+  });
+
+  it("authenticate user without password", () => {
+    const databaseMock = [
+      {
+        id: "3f517fc0-da92-4de8-bb6e-b594ab24bb84",
+        fullName: "First User",
+        username: "username",
+        password: "password123",
+      },
+    ];
+
+    const authMock = {
+      username: "username",
+      password: "",
+    };
+
+    database.read = jest.fn().mockReturnValue(databaseMock);
+
+    const userRepository = new UserRepository({});
+    const service = new UserService({ userRepository });
+
+    const response = service.authenticate(authMock);
+
+    expect(database.read.mock.calls.length).toBe(0);
+
+    expect(response).toBe(null);
+  });
+
+  it("authenticate user with wrong credentials", () => {
+    const databaseMock = [
+      {
+        id: "3f517fc0-da92-4de8-bb6e-b594ab24bb84",
+        fullName: "First User",
+        username: "username",
+        password: "password123",
+      },
+    ];
+
+    const authMock = {
+      username: "username",
+      password: "password1234",
+    };
+
+    database.read = jest.fn().mockReturnValue(databaseMock);
+
+    const userRepository = new UserRepository({});
+    const service = new UserService({ userRepository });
+
+    const response = service.authenticate(authMock);
+
+    expect(database.read.mock.calls.length).toBe(1);
 
     expect(response).toBe(null);
   });
