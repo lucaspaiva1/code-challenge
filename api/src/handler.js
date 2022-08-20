@@ -18,7 +18,7 @@ const filePath = path.join(__dirname, "./../database", "data.json");
 const publicRoutes = Router();
 const privateRoutes = Router();
 
-const userService = generateUserService({ filePath });
+export const userService = generateUserService({ filePath });
 userRoutes({ publicRoutes, privateRoutes, userService });
 
 const projectService = generateProjectService({ filePath });

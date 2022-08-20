@@ -1,13 +1,16 @@
-import routes from "./handler.js";
+import routes, { userService } from "./handler.js";
 import express from "express";
+import basicAuth from "./middlewares/basicAuth.js";
 
 const app = express();
+
+app.use(express.json());
 
 const port = process.env.PORT || 3000;
 
 app.use("/", routes.publicRoutes);
-app.use("/", routes.privateRoutes);
+app.use("/", basicAuth({ userService }), routes.privateRoutes);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.info(`API listening on port ${port}`);
 });
