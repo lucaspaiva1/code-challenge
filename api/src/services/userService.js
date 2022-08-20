@@ -1,25 +1,26 @@
+import User from "./../entities/user.js";
+
 export default class UserService {
   constructor({ userRepository }) {
     this.userRepository = userRepository;
   }
 
-  find() {
-    return this.userRepository.list();
+  find(id) {
+    return this.userRepository.find(id);
   }
 
-  list() {
-    return this.userRepository.list();
-  }
+  create({ data }) {
+    const user = new User(data);
 
-  create(data) {
-    return this.userRepository.create(data);
-  }
+    const checkUser = this.userRepository.findByUsername(user.username);
 
-  update(data) {
-    return this.userRepository.create(data);
-  }
+    if (checkUser) {
+      return null;
+    }
 
-  delete(data) {
-    return this.userRepository.create(data);
+    const createdUser = this.userRepository.create(user);
+    delete createdUser.password;
+
+    return createdUser;
   }
 }
