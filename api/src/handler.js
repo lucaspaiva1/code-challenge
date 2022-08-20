@@ -3,6 +3,8 @@ import { fileURLToPath } from "url";
 
 import { Router } from "express";
 
+import database from "./util/database.js";
+
 import { routes as userRoutes } from "./routes/userRoutes.js";
 import { routes as projectRoutes } from "./routes/projectRoutes.js";
 import { routes as taskRoutes } from "./routes/taskRoutes.js";
@@ -14,6 +16,8 @@ import { generateService as generateTaskService } from "./factories/taskFactory.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const filePath = path.join(__dirname, "./../database", "data.json");
+
+database.checkAndCreateDatabase(filePath);
 
 const publicRoutes = Router();
 const privateRoutes = Router();

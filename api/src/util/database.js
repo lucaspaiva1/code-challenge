@@ -27,9 +27,21 @@ export function reset(file) {
   );
 }
 
+export function checkAndCreateDatabase(file) {
+  try {
+    if (!fs.existsSync(file)) {
+      console.info("creating database...");
+      reset(file);
+    }
+  } catch (err) {
+    reset(file);
+  }
+}
+
 export default {
   read,
   reset,
   write,
   overwrite,
+  checkAndCreateDatabase,
 };
