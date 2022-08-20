@@ -1,22 +1,27 @@
-import fs from "fs";
+import database from "../util/database.js";
 
-export default class PojectRepository {
+export default class ProjectRepository {
   constructor({ file }) {
     this.file = file;
+    this.source = "projects";
   }
 
-  currentFileContent() {
-    return JSON.parse(fs.readFileSync(this.file)).projects;
+  readDatabaseContent() {
+    return database.read(this.file, this.source);
   }
 
   find() {
-    return this.currentFileContent();
+    return database.read(this.file, this.source);
+  }
+
+  list(userId) {
+    const projects = this.readDatabaseContent();
+    const result = projects.filter((p) => p.userId === userId);
+
+    return result;
   }
 
   create(data) {
-    const currentFile = this.currentFileContent();
-    currentFile.push(data);
-
-    return fs.writeFileSync(this.file, JSON.stringify(currentFile));
+    return write(this.file, this.source, data);
   }
 }

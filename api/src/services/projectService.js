@@ -4,11 +4,11 @@ export default class ProjectService {
   }
 
   find() {
-    return this.projectRepository.list();
+    return this.projectRepository.find();
   }
 
-  list() {
-    return this.projectRepository.list();
+  list(userId) {
+    return this.projectRepository.list(userId);
   }
 
   create(data) {
@@ -16,10 +16,10 @@ export default class ProjectService {
   }
 
   update(data) {
-    return this.projectRepository.create(data);
+    return this.projectRepository.update(data);
   }
 
   delete(data) {
-    return this.projectRepository.create(data);
+    return this.projectRepository.delete(data);
   }
 }
