@@ -1,3 +1,5 @@
+import EntityNotFoundError from "../errors/entityNotFoundError.js";
+
 export default class TaskService {
   constructor({ taskRepository, projectRepository }) {
     this.taskRepository = taskRepository;
@@ -6,23 +8,19 @@ export default class TaskService {
 
   #checkUserProject({ userId, projectId }) {
     if (!this.projectRepository.find({ userId, projectId })) {
-      return null;
+      throw new EntityNotFoundError();
     }
     return true;
   }
 
   list({ userId, projectId }) {
-    if (!this.#checkUserProject({ userId, projectId })) {
-      return null;
-    }
+    this.#checkUserProject({ userId, projectId });
     return this.taskRepository.list({ userId, projectId });
   }
 
-  create(data) {
+  create({ data }) {
     const { userId, projectId } = data;
-    if (!this.#checkUserProject({ userId, projectId })) {
-      return null;
-    }
+    this.#checkUserProject({ userId, projectId });
     return this.taskRepository.create(data);
   }
 
@@ -31,9 +29,7 @@ export default class TaskService {
 
     delete data.finishedAt;
 
-    if (!this.#checkUserProject({ userId, projectId })) {
-      return null;
-    }
+    this.#checkUserProject({ userId, projectId });
 
     if (data.done === true) {
       data.finishedAt = new Date();
@@ -42,11 +38,9 @@ export default class TaskService {
     return this.taskRepository.update(id, data);
   }
 
-  delete(data) {
+  delete({ data }) {
     const { userId, projectId } = data;
-    if (!this.#checkUserProject({ userId, projectId })) {
-      return null;
-    }
+    this.#checkUserProject({ userId, projectId });
     return this.taskRepository.create(data);
   }
 }

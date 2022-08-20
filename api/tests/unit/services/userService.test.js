@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import InvalidCredentialsError from "../../../src/errors/invalidCredentials";
 import UserRepository from "./../../../src/repositories/userRepository";
 import UserService from "./../../../src/services/userService";
 import database from "./../../../src/util/database.js";
@@ -107,11 +108,9 @@ describe("UserService", () => {
     const userRepository = new UserRepository({});
     const service = new UserService({ userRepository });
 
-    const response = service.authenticate(authMock);
-
-    expect(database.read.mock.calls.length).toBe(0);
-
-    expect(response).toBe(null);
+    expect(() => {
+      service.authenticate(authMock);
+    }).toThrow(InvalidCredentialsError);
   });
 
   it("authenticate user without password", () => {
@@ -134,11 +133,9 @@ describe("UserService", () => {
     const userRepository = new UserRepository({});
     const service = new UserService({ userRepository });
 
-    const response = service.authenticate(authMock);
-
-    expect(database.read.mock.calls.length).toBe(0);
-
-    expect(response).toBe(null);
+    expect(() => {
+      service.authenticate(authMock);
+    }).toThrow(InvalidCredentialsError);
   });
 
   it("authenticate user with wrong credentials", () => {
@@ -161,10 +158,8 @@ describe("UserService", () => {
     const userRepository = new UserRepository({});
     const service = new UserService({ userRepository });
 
-    const response = service.authenticate(authMock);
-
-    expect(database.read.mock.calls.length).toBe(1);
-
-    expect(response).toBe(null);
+    expect(() => {
+      service.authenticate(authMock);
+    }).toThrow(InvalidCredentialsError);
   });
 });

@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import EntityNotFoundError from "../../../src/errors/entityNotFoundError.js";
 import ProjectRepository from "./../../../src/repositories/projectRepository.js";
 import TaskRepository from "./../../../src/repositories/taskRepository.js";
 import TaskService from "./../../../src/services/taskService.js";
@@ -95,7 +96,7 @@ describe("TaskService", () => {
       description: "my first task",
     };
 
-    const response = service.create(taskMock);
+    const response = service.create({ data: taskMock });
 
     expect(database.write.mock.calls.length).toBe(1);
     expect(database.write.mock.calls[0][2].description).toBe(
@@ -135,11 +136,9 @@ describe("TaskService", () => {
       description: "my first task",
     };
 
-    const response = service.create(taskMock);
-
-    expect(database.write.mock.calls.length).toBe(0);
-
-    expect(response).toBe(null);
+    expect(() => {
+      service.create({ data: taskMock });
+    }).toThrow(EntityNotFoundError);
   });
 
   it("should update a task name", () => {

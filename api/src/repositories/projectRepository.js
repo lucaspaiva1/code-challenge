@@ -10,6 +10,12 @@ export default class ProjectRepository {
     return database.read(this.file, this.source);
   }
 
+  find({ userId, projectId }) {
+    return this.readDatabaseContent().find(
+      (p) => p.userId === userId && p.projectId === projectId
+    );
+  }
+
   list(userId) {
     const projectList = this.readDatabaseContent();
     return projectList.filter((p) => p.userId === userId);

@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import InvalidCredentialsError from "../../../src/errors/invalidCredentials.js";
 import basicAuth from "./../../../src/middlewares/basicAuth.js";
 import UserRepository from "./../../../src/repositories/userRepository.js";
 import UserService from "./../../../src/services/userService.js";
@@ -65,14 +66,9 @@ describe("BasicAuthMiddleware", () => {
       },
     }));
 
-    basicAuth({ userService })(req(), res, next);
-
-    expect(next.mock.calls.length).toBe(0);
-    expect(res.status.mock.calls.length).toBe(1);
-    expect(res.status.mock.calls[0][0]).toBe(401);
-    expect(res.json.mock.calls[0][0].message).toBe(
-      "invalid authorization header"
-    );
+    expect(() => {
+      basicAuth({ userService })(req(), res, next);
+    }).toThrow(InvalidCredentialsError);
   });
 
   it("should not authorize user without authorization header", () => {

@@ -1,3 +1,4 @@
+import InvalidCredentialsError from "../errors/invalidCredentials.js";
 import User from "./../entities/user.js";
 
 export default class UserService {
@@ -25,14 +26,18 @@ export default class UserService {
   }
 
   authenticate({ username, password }) {
-    if (!username || !password) return null;
+    if (!username || !password) {
+      throw new InvalidCredentialsError();
+    }
 
     const users = this.userRepository.list();
     const user = users.find(
       (u) => u.password === password && u.username === username
     );
 
-    if (!user) return null;
+    if (!user) {
+      throw new InvalidCredentialsError();
+    }
 
     delete user.password;
 
