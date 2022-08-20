@@ -3,19 +3,19 @@ export default class ProjectService {
     this.projectRepository = projectRepository;
   }
 
-  list(userId) {
+  list({ userId }) {
     return this.projectRepository.list(userId);
   }
 
-  create(data) {
+  create({ data }) {
     return this.projectRepository.create(data);
   }
 
-  update(data) {
-    return this.projectRepository.update(data);
+  update({ id, userId, data }) {
+    return this.projectRepository.update(id, userId, data);
   }
 
-  delete(data) {
+  delete({ data }) {
     return this.projectRepository.delete(data);
   }
 }

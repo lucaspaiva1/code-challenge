@@ -10,6 +10,12 @@ export function write(file, source, data) {
   return fs.writeFileSync(file, JSON.stringify(currentFile));
 }
 
+export function overwrite(file, source, data) {
+  const currentFile = JSON.parse(fs.readFileSync(file));
+  currentFile[source] = data;
+  return fs.writeFileSync(file, JSON.stringify(currentFile));
+}
+
 export function reset(file) {
   return fs.writeFileSync(
     file,
@@ -25,4 +31,5 @@ export default {
   read,
   reset,
   write,
+  overwrite,
 };

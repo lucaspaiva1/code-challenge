@@ -33,7 +33,7 @@ describe("ProjectService", () => {
     const projectRepository = new ProjectRepository({});
     const service = new ProjectService({ projectRepository });
 
-    const response = service.list(userId);
+    const response = service.list({ userId: userId });
 
     expect(response.length).toBe(2);
     expect(response.find((p) => p.id === projectId1)).toBeDefined();
@@ -42,22 +42,63 @@ describe("ProjectService", () => {
   });
 
   it("should test user project create service", () => {
-    const userId = "3f517fc0-da92-4de8-bb6e-b594ab24bb84";
-    const name = "Lorem ipsum";
-    const projectMock = { userId, name };
+    const projectMock = {
+      userId: "3f517fc0-da92-4de8-bb6e-b594ab24bb84",
+      name: "Lorem ipsum",
+    };
 
     database.write = jest.fn(() => {});
 
     const projectRepository = new ProjectRepository({});
     const service = new ProjectService({ projectRepository });
 
-    const response = service.create(projectMock);
+    const response = service.create({ data: projectMock });
 
     expect(database.write.mock.calls.length).toBe(1);
-    expect(database.write.mock.calls[0][2].name).toBe(name);
-    expect(database.write.mock.calls[0][2].userId).toBe(userId);
+    expect(database.write.mock.calls[0][2].name).toBe(projectMock.name);
+    expect(database.write.mock.calls[0][2].userId).toBe(projectMock.userId);
 
-    expect(response.name).toBe(name);
-    expect(response.userId).toBe(userId);
+    expect(response.name).toBe(projectMock.name);
+    expect(response.userId).toBe(projectMock.userId);
+  });
+
+  it("should test user project update service", () => {
+    const projectMock = {
+      id: "d620a01e-383b-4f4a-b710-506807e9160a",
+      userId: "3f517fc0-da92-4de8-bb6e-b594ab24bb84",
+      name: "Lorem ipsum",
+    };
+
+    const databaseMock = [
+      {
+        id: "fdc51954-cb47-45ce-b928-359938e4649b",
+        userId: "3f517fc0-da92-4de8-bb6e-b594ab24bb84",
+        name: "Proin pharetra",
+      },
+      projectMock,
+      {
+        id: "9d6f70e6-662d-4d41-a6af-c601e32911ae",
+        userId: "3f517fc0-da92-4de8-bb6e-b594ab24bb84",
+        name: "Consectetur adipiscing",
+      },
+    ];
+
+    database.read = jest.fn().mockReturnValue(databaseMock);
+    database.overwrite = jest.fn(() => {});
+
+    const newProjectName = { name: "Aliquam erat volutpat" };
+
+    const projectRepository = new ProjectRepository({});
+    const service = new ProjectService({ projectRepository });
+
+    const response = service.update({
+      id: projectMock.id,
+      userId: projectMock.userId,
+      data: newProjectName,
+    });
+
+    expect(database.overwrite.mock.calls.length).toBe(1);
+
+    expect(response.name).toBe(newProjectName.name);
   });
 });

@@ -10,19 +10,30 @@ export default class ProjectRepository {
     return database.read(this.file, this.source);
   }
 
-  find() {
-    return database.read(this.file, this.source);
-  }
-
   list(userId) {
-    const projects = this.readDatabaseContent();
-    const result = projects.filter((p) => p.userId === userId);
-
-    return result;
+    const projectList = this.readDatabaseContent();
+    return projectList.filter((p) => p.userId === userId);
   }
 
   create(data) {
     database.write(this.file, this.source, data);
     return data;
+  }
+
+  update(id, userId, data) {
+    let project = null;
+
+    const projectList = this.list(userId);
+    const projectListUpdated = projectList.map((p) => {
+      if (p.id === id) {
+        project = { ...p, ...data };
+        return project;
+      }
+      return data;
+    });
+
+    if (project) database.overwrite(this.file, this.source, projectListUpdated);
+
+    return project;
   }
 }
