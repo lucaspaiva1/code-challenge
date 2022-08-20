@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
-import ProjectRepository from "../../src/repositories/projectRepository.js";
-import ProjectService from "../../src/services/projectService.js";
-import database from "../../src/util/database.js";
+import ProjectRepository from "./../../../src/repositories/projectRepository.js";
+import ProjectService from "./../../../src/services/projectService.js";
+import database from "./../../../src/util/database.js";
 
 describe("ProjectService", () => {
   it("should test user project list service", () => {

@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
-import UserRepository from "../../src/repositories/userRepository";
-import UserService from "../../src/services/userService";
-import database from "../../src/util/database.js";
+import UserRepository from "./../../../src/repositories/userRepository";
+import UserService from "./../../../src/services/userService";
+import database from "./../../../src/util/database.js";
 
 describe("UserService", () => {
   it("create user with success", () => {
