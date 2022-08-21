@@ -1,4 +1,5 @@
 import database from "../util/database.js";
+import { merge } from "./../util/merge.js";
 
 export default class ProjectRepository {
   constructor({ file }) {
@@ -12,13 +13,24 @@ export default class ProjectRepository {
 
   find({ userId, projectId }) {
     return this.readDatabaseContent().find(
-      (p) => p.userId === userId && p.projectId === projectId
+      (p) => p.userId === userId && p.id === projectId
     );
   }
 
-  list(userId) {
+  list(userId, withTasks = false) {
     const projectList = this.readDatabaseContent();
-    return projectList.filter((p) => p.userId === userId);
+    const filteredList = projectList.filter((p) => p.userId === userId);
+
+    if (!withTasks) return filteredList;
+
+    const tasks = database.read(this.file, "tasks");
+
+    return filteredList.map((p) => {
+      return {
+        ...p,
+        tasks: tasks.filter((t) => t.projectId === p.id),
+      };
+    });
   }
 
   create(data) {
@@ -32,10 +44,10 @@ export default class ProjectRepository {
     const projectList = this.readDatabaseContent();
     const projectListUpdated = projectList.map((item) => {
       if (item.id === id && item.userId === userId) {
-        project = { ...item, ...data };
+        project = merge(item, data);
         return project;
       }
-      return data;
+      return item;
     });
 
     if (project) database.overwrite(this.file, this.source, projectListUpdated);

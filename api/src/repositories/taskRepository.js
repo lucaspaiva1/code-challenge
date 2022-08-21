@@ -1,4 +1,5 @@
 import database from "../util/database.js";
+import { merge } from "./../util/merge.js";
 
 export default class TaskRepository {
   constructor({ file }) {
@@ -29,10 +30,10 @@ export default class TaskRepository {
 
     const taskListUpdated = taskList.map((item) => {
       if (item.id === id && item.userId === userId) {
-        task = { ...item, ...data };
+        task = merge(item, data);
         return task;
       }
-      return data;
+      return item;
     });
 
     if (task) database.overwrite(this.file, this.source, taskListUpdated);
