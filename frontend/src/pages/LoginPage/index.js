@@ -13,6 +13,10 @@ const Container = styled.div`
     margin: 10px;
     min-width: 25%;
   }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
 `;
 
 const LoginPage = () => {
