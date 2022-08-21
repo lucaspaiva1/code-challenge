@@ -1,5 +1,5 @@
 import InvalidCredentialsError from "../errors/invalidCredentials.js";
-import BadRequestError from "../errors/badRequest";
+import BadRequestError from "../errors/badRequest.js";
 import UserAlreadyExists from "../errors/userAlreadyExists.js";
 import User from "./../entities/user.js";
 import bcrypt from "bcrypt";
