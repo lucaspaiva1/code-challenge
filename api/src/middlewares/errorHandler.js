@@ -1,6 +1,7 @@
 import HttpError from "../errors/httpError.js";
 
 function errorHandler(err, req, res, next) {
+  console.error(console.log(err));
   if (err instanceof HttpError) {
     return res.status(err.httpCode).send({ message: err.message });
   }

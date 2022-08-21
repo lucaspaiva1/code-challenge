@@ -5,8 +5,8 @@ export default class ProjectService {
     this.projectRepository = projectRepository;
   }
 
-  list({ userId }) {
-    return this.projectRepository.list(userId);
+  list({ userId }, withTasks = false) {
+    return this.projectRepository.list(userId, withTasks);
   }
 
   create({ data }) {

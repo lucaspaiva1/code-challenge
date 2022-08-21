@@ -1,3 +1,4 @@
+import Task from "../entities/task.js";
 import EntityNotFoundError from "../errors/entityNotFoundError.js";
 
 export default class TaskService {
@@ -19,29 +20,32 @@ export default class TaskService {
   }
 
   create({ data }) {
-    const { userId, projectId } = data;
+    const task = new Task(data);
+    const { userId, projectId } = task;
     this.#checkUserProject({ userId, projectId });
-    return this.taskRepository.create(data);
+    return this.taskRepository.create(task);
   }
 
   update({ id, data }) {
-    const { userId, projectId } = data;
+    const task = new Task(data, false);
 
-    delete data.finishedAt;
+    const { userId, projectId } = task;
+
+    delete task.finishedAt;
 
     this.#checkUserProject({ userId, projectId });
 
     if (data.done === true) {
-      data.finishedAt = new Date();
+      task.finishedAt = new Date();
     }
 
-    const task = this.taskRepository.update(id, userId, data);
+    const updatedTask = this.taskRepository.update(id, userId, task);
 
-    if (!task) {
+    if (!updatedTask) {
       throw new EntityNotFoundError();
     }
 
-    return task;
+    return updatedTask;
   }
 
   delete({ id, userId, projectId }) {

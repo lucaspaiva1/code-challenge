@@ -1,7 +1,10 @@
 import { randomUUID } from "crypto";
 
 export default class Task {
-  constructor({ projectId, description, finishedAt }, generateId = true) {
+  constructor(
+    { projectId, userId, description, finishedAt },
+    generateId = true
+  ) {
     if (generateId) {
       this.id = randomUUID();
     }
