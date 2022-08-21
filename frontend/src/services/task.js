@@ -5,22 +5,11 @@ import { authHeader } from "../helpers/authHeader";
 const baseApi = "http://localhost:8000";
 
 export default {
-  async list() {
-    try {
-      const response = await axios.get(`${baseApi}/projects?withTasks=true`, {
-        headers: authHeader(),
-      });
-      return response.data;
-    } catch (err) {
-      return handleRequestError(err);
-    }
-  },
-
-  async create({ name }) {
+  async create(projectId, { description }) {
     try {
       const response = await axios.post(
-        `${baseApi}/projects`,
-        { name },
+        `${baseApi}/projects/${projectId}/tasks`,
+        { description },
         { headers: authHeader() }
       );
       return response.data;
@@ -29,11 +18,11 @@ export default {
     }
   },
 
-  async update(id, { name }) {
+  async update(projectId, taskId, data) {
     try {
       const response = await axios.put(
-        `${baseApi}/projects/${id}`,
-        { name },
+        `${baseApi}/projects/${projectId}/tasks/${taskId}`,
+        data,
         { headers: authHeader() }
       );
       return response.data;
@@ -42,11 +31,12 @@ export default {
     }
   },
 
-  async delete(id) {
+  async delete(projectId, taskId) {
     try {
-      const response = await axios.delete(`${baseApi}/projects/${id}`, {
-        headers: authHeader(),
-      });
+      const response = await axios.delete(
+        `${baseApi}/projects/${projectId}/tasks/${taskId}`,
+        { headers: authHeader() }
+      );
       return response.data;
     } catch (err) {
       return handleRequestError(err);

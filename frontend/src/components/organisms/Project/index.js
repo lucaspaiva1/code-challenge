@@ -1,11 +1,12 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Card from "./../../atoms/Card";
-import Input from "./../../atoms/Input";
-import Button from "./../../atoms/Button";
 import Icon from "./../../atoms/Icon";
+import ProjectEditForm from "./../../molecules/ProjectEditForm";
+import Tasks from "./../../molecules/Tasks";
 import projectService from "../../../services/project";
 import { useProjects } from "../../../providers/project";
+import TaskCreateForm from "../../molecules/TaskCreateForm";
 
 const Container = styled.div`
   margin-bottom: 10px;
@@ -16,19 +17,13 @@ const ProjectHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #f5f6fa;
+  margin-bottom: 20px;
 `;
 
 const ProjectName = styled.h2`
   font-size: 18px;
   font-weight: 600;
   margin: 0px;
-`;
-
-const EditForm = styled.form`
-  display: flex;
 `;
 
 const ActionButton = styled.button`
@@ -39,50 +34,25 @@ const ActionButton = styled.button`
   margin-left: 5px;
 `;
 
+const Content = styled.div`
+  border-top: 1px solid #f5f6fa;
+  border-bottom: 1px solid #f5f6fa;
+`;
+
 const Project = ({ project }) => {
   const { projects, setProjects } = useProjects();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState({ name: project.name });
 
   const onEdit = () => {
     setIsEditing(true);
   };
+
   const onDelete = async () => {
     try {
       await projectService.delete(project.id);
       setProjects(projects.filter((p) => p.id !== project.id));
     } catch (err) {}
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const updatedProject = await projectService.update(project.id, editForm);
-      setProjects(
-        projects.map((p) => {
-          return p.id === project.id ? updatedProject : p;
-        })
-      );
-    } catch (err) {
-      //
-    }
-    setIsEditing(false);
-  };
-
-  const renderEdit = () => {
-    return (
-      <EditForm onSubmit={onSubmit}>
-        <Input
-          value={editForm.name}
-          setValue={(value) => setEditForm({ name: value })}
-          required
-        />
-        <Button sm style={{ marginLeft: "5px" }} type="submit">
-          Save
-        </Button>
-      </EditForm>
-    );
   };
 
   const renderHeader = () => {
@@ -101,7 +71,9 @@ const Project = ({ project }) => {
             </div>
           </>
         )}
-        {isEditing && renderEdit()}
+        {isEditing && (
+          <ProjectEditForm project={project} setIsEditing={setIsEditing} />
+        )}
       </ProjectHeader>
     );
   };
@@ -110,7 +82,10 @@ const Project = ({ project }) => {
     <Container>
       <Card>
         {renderHeader()}
-        {project.name}
+        <Content>
+          <Tasks tasks={project.tasks} />
+        </Content>
+        <TaskCreateForm project={project} />
       </Card>
     </Container>
   );
