@@ -1,5 +1,6 @@
 import { jest } from "@jest/globals";
 import InvalidCredentialsError from "../../../src/errors/invalidCredentials";
+import UserAlreadyExists from "../../../src/errors/userAlreadyExists";
 import UserRepository from "./../../../src/repositories/userRepository";
 import UserService from "./../../../src/services/userService";
 import database from "./../../../src/util/database.js";
@@ -50,11 +51,9 @@ describe("UserService", () => {
     const userRepository = new UserRepository({});
     const service = new UserService({ userRepository });
 
-    const response = service.create({ data: userMock });
-
-    expect(database.write.mock.calls.length).toBe(0);
-
-    expect(response).toBe(null);
+    expect(() => {
+      service.create({ data: userMock });
+    }).toThrow(UserAlreadyExists);
   });
 
   it("authenticate user with success", () => {

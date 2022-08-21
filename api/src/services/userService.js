@@ -1,4 +1,5 @@
 import InvalidCredentialsError from "../errors/invalidCredentials.js";
+import UserAlreadyExists from "../errors/userAlreadyExists.js";
 import User from "./../entities/user.js";
 
 export default class UserService {
@@ -16,7 +17,7 @@ export default class UserService {
     const checkUser = this.userRepository.findByUsername(user.username);
 
     if (checkUser) {
-      return null;
+      throw new UserAlreadyExists();
     }
 
     const createdUser = this.userRepository.create(user);
