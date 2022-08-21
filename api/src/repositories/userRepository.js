@@ -11,7 +11,8 @@ export default class UserRepository {
   }
 
   findByUsername(username) {
-    return this.readDatabaseContent().find((u) => u.username === username);
+    const data = this.readDatabaseContent();
+    return data.find((u) => u.username === username);
   }
 
   create(data) {

@@ -1,5 +1,5 @@
 function basicAuth({ userService }) {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     if (
       !req.headers.authorization ||
       !req.headers.authorization.includes("Basic ")
@@ -14,7 +14,7 @@ function basicAuth({ userService }) {
 
     const [username, password] = credentials.split(":");
 
-    const user = userService.authenticate({ username, password });
+    const user = await userService.authenticate({ username, password });
 
     if (!user) {
       return res.status(401).json({ message: "invalid authorization header" });

@@ -5,12 +5,13 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.js",
+    "start": "nodemon index.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "nodemon": "^2.0.19"

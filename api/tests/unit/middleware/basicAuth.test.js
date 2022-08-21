@@ -5,6 +5,10 @@ import UserRepository from "./../../../src/repositories/userRepository.js";
 import UserService from "./../../../src/services/userService.js";
 import database from "./../../../src/util/database.js";
 
+const password = "password";
+const hashedPassword =
+  "$2b$10$xfYpwpb5rG4zB4ADblrG2.Vlpve2xruVhWlLeJ2AEWdeEffKDLbPi";
+
 const generateBasicHeader = ({ username, password }) => {
   const credentials = `${username}:${password}`;
   return Buffer.from(credentials).toString("base64");
@@ -15,7 +19,7 @@ const databaseMock = [
     id: "3f517fc0-da92-4de8-bb6e-b594ab24bb84",
     fullName: "User",
     username: "username",
-    password: "password123",
+    password: hashedPassword,
   },
 ];
 
@@ -31,7 +35,7 @@ describe("BasicAuthMiddleware", () => {
     next = jest.fn(() => {});
   });
 
-  it("should authorize user with correct token", () => {
+  it("should authorize user with correct token", async () => {
     database.read = jest.fn().mockReturnValue(databaseMock);
 
     const userRepository = new UserRepository({});
@@ -41,17 +45,17 @@ describe("BasicAuthMiddleware", () => {
       headers: {
         authorization: `Basic ${generateBasicHeader({
           username: databaseMock[0].username,
-          password: databaseMock[0].password,
+          password: password,
         })}`,
       },
     }));
 
-    basicAuth({ userService })(req(), res, next);
+    await basicAuth({ userService })(req(), res, next);
 
-    expect(next.mock.calls.length).toBe(1);
+    await expect(next.mock.calls.length).toBe(1);
   });
 
-  it("should not authorize user with invalid credentials", () => {
+  it("should not authorize user with invalid credentials", async () => {
     database.read = jest.fn().mockReturnValue(databaseMock);
 
     const userRepository = new UserRepository({});
@@ -66,12 +70,12 @@ describe("BasicAuthMiddleware", () => {
       },
     }));
 
-    expect(() => {
-      basicAuth({ userService })(req(), res, next);
-    }).toThrow(InvalidCredentialsError);
+    await expect(async () => {
+      await basicAuth({ userService })(req(), res, next);
+    }).rejects.toThrow(InvalidCredentialsError);
   });
 
-  it("should not authorize user without authorization header", () => {
+  it("should not authorize user without authorization header", async () => {
     database.read = jest.fn().mockReturnValue(databaseMock);
 
     const userRepository = new UserRepository({});
@@ -81,12 +85,12 @@ describe("BasicAuthMiddleware", () => {
       headers: {},
     }));
 
-    basicAuth({ userService })(req(), res, next);
+    await basicAuth({ userService })(req(), res, next);
 
-    expect(next.mock.calls.length).toBe(0);
-    expect(res.status.mock.calls.length).toBe(1);
-    expect(res.status.mock.calls[0][0]).toBe(401);
-    expect(res.json.mock.calls[0][0].message).toBe(
+    await expect(next.mock.calls.length).toBe(0);
+    await expect(res.status.mock.calls.length).toBe(1);
+    await expect(res.status.mock.calls[0][0]).toBe(401);
+    await expect(res.json.mock.calls[0][0].message).toBe(
       "missing authorization header"
     );
   });
