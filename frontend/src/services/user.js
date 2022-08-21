@@ -5,7 +5,7 @@ const baseApi = "http://localhost:8000";
 
 const USER_STORAGE_KEY = "user";
 
-export default {
+const userService = {
   async login({ username, password }) {
     try {
       const response = await axios.post(
@@ -67,3 +67,5 @@ function generateAuthBasic({ username, password }) {
 function storeUser(user) {
   localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
 }
+
+export default userService;

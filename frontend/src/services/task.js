@@ -4,7 +4,7 @@ import { authHeader } from "../helpers/authHeader";
 
 const baseApi = "http://localhost:8000";
 
-export default {
+const taskService = {
   async create(projectId, { description }) {
     try {
       const response = await axios.post(
@@ -43,3 +43,5 @@ export default {
     }
   },
 };
+
+export default taskService;

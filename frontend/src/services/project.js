@@ -4,7 +4,7 @@ import { authHeader } from "../helpers/authHeader";
 
 const baseApi = "http://localhost:8000";
 
-export default {
+const projectService = {
   async list() {
     try {
       const response = await axios.get(`${baseApi}/projects?withTasks=true`, {
@@ -53,3 +53,5 @@ export default {
     }
   },
 };
+
+export default projectService;
