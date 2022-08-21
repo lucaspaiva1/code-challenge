@@ -39,7 +39,7 @@ describe("TaskService", () => {
 
     const projectsDatabaseMock = [
       {
-        projectId,
+        id: projectId,
         name: "My Project",
         userId,
       },
@@ -77,7 +77,7 @@ describe("TaskService", () => {
 
     const projectsDatabaseMock = [
       {
-        projectId,
+        id: projectId,
         name: "My Project",
         userId,
       },
@@ -117,7 +117,7 @@ describe("TaskService", () => {
 
     const projectsDatabaseMock = [
       {
-        projectId,
+        id: projectId,
         name: "My Project",
         userId: "766b5277-3bcc-4ee5-b176-39673bbfeef7",
       },
@@ -157,7 +157,7 @@ describe("TaskService", () => {
 
     const projectsDatabaseMock = [
       {
-        projectId,
+        id: projectId,
         name: "My Project",
         userId,
       },
@@ -206,7 +206,7 @@ describe("TaskService", () => {
 
     const projectsDatabaseMock = [
       {
-        projectId,
+        id: projectId,
         name: "My Project",
         userId,
       },
@@ -258,7 +258,7 @@ describe("TaskService", () => {
 
     const projectsDatabaseMock = [
       {
-        projectId,
+        id: projectId,
         name: "My Project",
         userId,
       },
@@ -311,7 +311,7 @@ describe("TaskService", () => {
 
     const projectsDatabaseMock = [
       {
-        projectId,
+        id: projectId,
         name: "My Project",
         userId,
       },
