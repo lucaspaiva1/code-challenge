@@ -3,7 +3,7 @@ import Input from "../../atoms/Input";
 import Button from "../../atoms/Button";
 import ErrorMessage from "../../atoms/ErrorMessage";
 import styled from "styled-components";
-import { userService } from "../../../services/user";
+import userService from "../../../services/user";
 import { useAuth } from "../../../providers/auth";
 
 const Form = styled.form`

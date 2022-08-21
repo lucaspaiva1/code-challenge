@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { userService } from "../../../services/user";
+import userService from "../../../services/user";
 import { useAuth } from "../../../providers/auth";
 import Button from "../../atoms/Button";
 

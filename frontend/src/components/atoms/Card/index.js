@@ -4,6 +4,7 @@ const Container = styled.div`
   background: #fff;
   border-radius: 6px;
   padding: 20px;
+  box-sizing: border-box;
 `;
 
 const Card = ({ children }) => {
