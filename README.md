@@ -44,3 +44,5 @@ npm i
 
 npm start
 ```
+
+By default the app will run on [localhost:3000](http://localhost:3000)
