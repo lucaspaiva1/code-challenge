@@ -1,20 +1,35 @@
+import styled from "styled-components";
+import React from "react";
+import { useAuth } from "./providers/auth";
+import LoginPage from "./pages/LoginPage";
+import MainPage from "./pages/MainPage";
+import Header from "./components/molecules/Header";
+
+const Container = styled.section`
+  background-color: #f5f6fa;
+`;
+
+const Content = styled.section`
+  max-width: 1320px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: #f5f6fa;
+  padding: 20px;
+`;
+
 function App() {
+  const { user } = useAuth();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <Container>
+        <Content>
+          {!user && <LoginPage />}
+          {user && <MainPage />}
+        </Content>
+      </Container>
+    </>
   );
 }
 
