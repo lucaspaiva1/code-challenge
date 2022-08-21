@@ -19,6 +19,7 @@ const CreateProjectForm = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMessage("");
     try {
       await projectService.create({
         name,
