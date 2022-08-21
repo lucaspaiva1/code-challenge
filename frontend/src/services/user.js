@@ -1,10 +1,11 @@
 import axios from "axios";
+import { handleRequestError } from "../helpers/handleRequestError";
 
 const baseApi = "http://localhost:8000";
 
 const USER_STORAGE_KEY = "user";
 
-export const userService = {
+export default {
   async login({ username, password }) {
     try {
       const response = await axios.post(
@@ -23,7 +24,7 @@ export const userService = {
 
       return data;
     } catch (err) {
-      return handleError(err);
+      return handleRequestError(err);
     }
   },
 
@@ -54,16 +55,10 @@ export const userService = {
 
       return data;
     } catch (err) {
-      return handleError(err);
+      return handleRequestError(err);
     }
   },
 };
-
-function handleError(err) {
-  return Promise.reject(
-    err?.response?.data?.message || "An error has occurred"
-  );
-}
 
 function generateAuthBasic({ username, password }) {
   return window.btoa(`${username}:${password}`);
